@@ -1,0 +1,17 @@
+.image-style-align-right {
+    float: right;
+    display: block;
+    margin-left: 10px;
+}
+
+.image-style-align-left {
+    float: left;
+    display: block;
+    margin-right: 10px;
+}
+
+.image-style-align-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

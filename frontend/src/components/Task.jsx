@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { setShowTaskDetailsPopup, setGetTaskDetails, setTaskColArrays, taskUpdateColumnApi } from "../redux/slices/taskSlice"
+;
 
 const Task = ({task, id}) => {
     const dispatch = useDispatch()
@@ -27,7 +28,6 @@ const Task = ({task, id}) => {
               }
           }
 
-
     const moveLeft = (e, task)=>{
           e.stopPropagation()
           if(taskSlice.showAddTaskPopup || taskSlice.showTaskDetailsPopup) return
@@ -40,10 +40,9 @@ const Task = ({task, id}) => {
               }
           }
       
-
   return (
-    <div className="cursor-pointer" onClick={()=>handleGetTaskDetails(task?.taskTitle, task?.taskDetails)}>
-        {task?.taskTitle}
+    <div>
+        <div className="cursor-pointer" onClick={()=>handleGetTaskDetails(task?.taskTitle, task?.taskDetails)}> {task?.taskTitle} </div>
         <div className="flex gap-10 justify-center" id={id}>
               {(id == "c1") ? <button className=" bg-gray-300 rounded-full w-10 h-10" onClick={(e)=>moveRight(e, task)}>{"->"}
               </button> : (id == "c2") ?

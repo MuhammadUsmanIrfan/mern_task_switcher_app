@@ -42,7 +42,7 @@ const Task = ({task, id}) => {
       
   return (
     <div>
-        <div className="cursor-pointer" onClick={()=>handleGetTaskDetails(task?.taskTitle, task?.taskDetails)}> {task?.taskTitle} </div>
+        <div className="cursor-pointer w-fit mx-auto" onClick={()=>handleGetTaskDetails(task?.taskTitle, task?.taskDetails)}> {task?.taskTitle} </div>
         <div className="flex gap-10 justify-center" id={id}>
               {(id == "c1") ? <button className=" bg-gray-300 rounded-full w-10 h-10" onClick={(e)=>moveRight(e, task)}>{"->"}
               </button> : (id == "c2") ?

@@ -13,21 +13,22 @@ const Columns = ({col, id, setColumnDraggable}) => {
 
     const droppedColId =  document.elementFromPoint(e.screenX, e.screenY)?.id
    
-    if(droppedColId == "c1"){
+    if(droppedColId == "col1"){
        dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col1"}))
     }
-    if(droppedColId == "c2"){
+    if(droppedColId == "col2"){
        dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col2"}))
     }
-    if(droppedColId == "c3"){
+    if(droppedColId == "col3"){
        dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col3"}))
     }
    }
 
     return (
      <>
-    {taskSlice.showTaskDetailsPopup && <ShowDetailsPopup/>} 
+    {/* {taskSlice.showTaskDetailsPopup && <ShowDetailsPopup/>}  */}
         <div id={id} className="border border-white rounded-lg min-h-[60vh] w-[80%] p-3">
+          <p className="text-center">{id}</p>
           {col.map((task)=>(
             <Draggable
             position={{x:0, y:0}}

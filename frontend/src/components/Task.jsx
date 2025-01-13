@@ -20,10 +20,10 @@ const Task = ({task, id}) => {
           e.stopPropagation()
           if(taskSlice.showAddTaskPopup || taskSlice.showTaskDetailsPopup) return
             const colId=id;
-            if(colId == "c1")
+            if(colId == "col1")
               {
                 dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col2"}))
-              } else if(colId == "c2"){
+              } else if(colId == "col2"){
                 dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col3"}))
               }
           }
@@ -32,10 +32,10 @@ const Task = ({task, id}) => {
           e.stopPropagation()
           if(taskSlice.showAddTaskPopup || taskSlice.showTaskDetailsPopup) return
             const colId=id;
-            if(colId == "c2")
+            if(colId == "col2")
               {
                 dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col1"}))
-              }else if(colId == "c3"){
+              }else if(colId == "col3"){
                 dispatch(taskUpdateColumnApi({taskId: task._id, taskColumn: "col2"}))
               }
           }
@@ -44,8 +44,8 @@ const Task = ({task, id}) => {
     <div>
         <div className="cursor-pointer w-fit mx-auto" onClick={()=>handleGetTaskDetails(task?.taskTitle, task?.taskDetails)}> {task?.taskTitle} </div>
         <div className="flex gap-10 justify-center" id={id}>
-              {(id == "c1") ? <button className=" bg-gray-300 rounded-full w-10 h-10" onClick={(e)=>moveRight(e, task)}>{"->"}
-              </button> : (id == "c2") ?
+              {(id == "col1") ? <button className=" bg-gray-300 rounded-full w-10 h-10" onClick={(e)=>moveRight(e, task)}>{"->"}
+              </button> : (id == "col2") ?
                <> 
                <button className=" bg-gray-300 rounded-full w-10 h-10" onClick={(e)=>moveLeft(e, task)}>{"<-"}</button> 
                <button className=" bg-gray-300 rounded-full w-10 h-10" onClick={(e)=>moveRight(e, task)}>{"->"}</button>

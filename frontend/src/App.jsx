@@ -42,40 +42,37 @@ const App = () => {
 
   const handleDragStop = (e, data, columnId) => {
     setColumnZindex(false)
-    const droppedColClassName = document.elementFromPoint(e.screenX, e.screenY)?.parentElement?.className;
     const droppedColId = document.elementFromPoint(e.screenX, e.screenY)?.parentElement?.id;
-   
-    // console.log(data?.node);
     console.log("columnId-->",columnId, "droppedColId-->",droppedColId);
-    if(columnId=="c1" && droppedColId == "c2")
-    {
-        // setColumnOrder({
-        //   c1: "order-2",
-        //   c2: "order-1",
-        //   c3: "order-3",
-        // })
-    } else if(columnId=="c1" && droppedColId == "c3"){
-        // setColumnOrder({
-        //   c3: "order-1",
-        //   c1: "order-3",
-        //   c2: "order-2"
-        // })
-    }
-    if(columnId=="c2" && droppedColId == "c3")
-      {
-          // setColumnOrder({
-          //   c1: "order-1",
-          //   c2: "order-3",
-          //   c3: "order-2",
-          // })
-      }
    
-  
+    
+    if(columnId=="col1" && droppedColId == "col2")
+    {
+        setColumns([
+          {id:"col1", order:"order-2"},
+          {id:"col2", order:"order-1"},
+          {id:"col3", order:"order-3"},
+        ])
+    } else if(columnId=="col1" && droppedColId == "col3"){
+      setColumns([
+        {id:"col1", order:"order-3"},
+        {id:"col2", order:"order-2"},
+        {id:"col3", order:"order-1"},
+      ])
+    }
+    if(columnId=="col2" && droppedColId == "col3")
+      {
+        setColumns([
+          {id:"col1", order:"order-1"},
+          {id:"col2", order:"order-3"},
+          {id:"col3", order:"order-2"},
+        ])
+      }
   };
 
   const handleOnStart = (e, data)=>{
     // setColumnZindex(true)
-    console.log(data?.node);
+    // console.log(data?.node);
   }
 
   return (
@@ -96,8 +93,8 @@ const App = () => {
         </button>
       </div>
 
-      <div className={`flex gap-4 justify-center pt-5 ${columnZindex ? "relative z-10" : "relative z-30"} border border-red-500 p-3 max-w-[90vw] mx-auto rounded-lg`}>
-        {columns?.map((column)=>(
+      <div className={`flex gap-4 justify-center pt-5 border border-red-500 p-3 max-w-[90vw] mx-auto rounded-lg`}>
+        {columns?.map((column, index)=>(
             <Draggable
               key={column.id}
               disabled={columnDraggable}

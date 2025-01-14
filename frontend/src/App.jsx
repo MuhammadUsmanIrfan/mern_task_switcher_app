@@ -4,25 +4,46 @@ import AddTaskPopUp from "./components/AddTaskPopUp";
 import Columns from "./components/Columns";
 import Overlay from "./components/Overlay";
 import {getTasksApi, setApiStatus, setAddTaskResp} from "./redux/slices/taskSlice";
-import { useEffect, useRef, useState } from "react";
-import Draggable from "react-draggable";
+import { useEffect, useState } from "react";
 import ShowDetailsPopup from "./components/ShowDetailsPopup";
+import {DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const [columnDraggable, setColumnDraggable] = useState(false);
-  const [columnZindex, setColumnZindex] = useState(false);
+  const [columnDraggable, setColumnDraggable] = useState(true);
 
   const [columns, setColumns] = useState([
-    {id:"col1", order:"order-1"},
-    {id:"col2", order:"order-2"},
-    {id:"col3", order:"order-3"},
+    {id:"col1"},
+    {id:"col2"},
+    {id:"col3"},
   ]);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const getColumnPos = id => columns.findIndex(task => task.id === id)
+
+  function handleDragEnd(event) {
+    const {active, over} = event;
+    const oldIndex = getColumnPos(active?.id)
+    const newIndex = getColumnPos(over?.id)
+    
+    if (columnDraggable && active?.id !== over?.id) {
+      setColumns((columns) => {    
+        return arrayMove(columns, oldIndex, newIndex);
+      });
+    }
+  }
 
   const taskSlice = useSelector((state) => state.taskSlice);
   const taskColArrays = useSelector((state) => state.taskSlice.taskColArrays);
-
+  
   const handleAddTask = () => {
     dispatch(setShowAddTaskPopup(true));
   };
@@ -39,41 +60,6 @@ const App = () => {
       dispatch(setAddTaskResp(""));
     } else dispatch(setAddTaskResp(""));
   }, [taskSlice.addTaskResp]);
-
-  const handleDragStop = (e, data, columnId) => {
-    setColumnZindex(false)
-    const droppedColId = document.elementFromPoint(e.screenX, e.screenY)?.parentElement?.id;
-    console.log("columnId-->",columnId, "droppedColId-->",droppedColId);
-   
-    
-    if(columnId=="col1" && droppedColId == "col2")
-    {
-        setColumns([
-          {id:"col1", order:"order-2"},
-          {id:"col2", order:"order-1"},
-          {id:"col3", order:"order-3"},
-        ])
-    } else if(columnId=="col1" && droppedColId == "col3"){
-      setColumns([
-        {id:"col1", order:"order-3"},
-        {id:"col2", order:"order-2"},
-        {id:"col3", order:"order-1"},
-      ])
-    }
-    if(columnId=="col2" && droppedColId == "col3")
-      {
-        setColumns([
-          {id:"col1", order:"order-1"},
-          {id:"col2", order:"order-3"},
-          {id:"col3", order:"order-2"},
-        ])
-      }
-  };
-
-  const handleOnStart = (e, data)=>{
-    // setColumnZindex(true)
-    // console.log(data?.node);
-  }
 
   return (
     <div className={`min-h-[100vh] bg-slate-400 relative`}>
@@ -92,29 +78,24 @@ const App = () => {
           Add Task
         </button>
       </div>
-
-      <div className={`flex gap-4 justify-center pt-5 border border-red-500 p-3 max-w-[90vw] mx-auto rounded-lg`}>
-        {columns?.map((column, index)=>(
-            <Draggable
-              key={column.id}
-              disabled={columnDraggable}
-              position={{ x: 0, y: 0 }}
-              scale={1}
-              onStart={handleOnStart}
-              onStop={(e, data)=>handleDragStop(e, data, column.id)}
-            >
-              <div className={`${column.order} w-[100vw] flex justify-center ${columnZindex ? "relative z-10" : "relative z-30"}`} id={column.id}>
-                <Columns
-                  col={taskColArrays[column.id]}
-                  id={column.id}
-                  setColumnDraggable={setColumnDraggable}
-                />
+      <DndContext  sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <div className={`flex gap-4 justify-center pt-5 border border-red-500 p-3 max-w-[90vw] mx-auto rounded-lg`}>
+        <SortableContext 
+        items={columns}
+        strategy={horizontalListSortingStrategy}>
+          {columns?.map((column)=>(
+              <div className={`w-[100vw] flex justify-center`} id={column.id} key={column.id}>
+                  <Columns
+                    col={taskColArrays[column.id]}
+                    id={column.id}
+                    columnDraggable={columnDraggable}
+                    setColumnDraggable={setColumnDraggable}/>
               </div>
-            </Draggable>
-        ))}
-      </div>
+          ))}
+          </SortableContext>
+        </div>
+      </DndContext>
     </div>
   );
 };
 export default App;
-
